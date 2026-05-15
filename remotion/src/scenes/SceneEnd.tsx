@@ -40,7 +40,7 @@ export const SceneEnd = () => {
         transform: `scale(${badgeSp})`, opacity: badgeSp,
         boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
       }}>
-        <div style={{ fontSize: 56 }}>▶</div>
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="#fff"><path d="M6 4l14 8-14 8z" /></svg>
         <div style={{ textAlign: "left" }}>
           <div style={{ fontFamily: body, fontSize: 22, opacity: 0.8 }}>GET IT ON</div>
           <div style={{ fontSize: 44, fontWeight: 800, letterSpacing: -1 }}>Google Play</div>
