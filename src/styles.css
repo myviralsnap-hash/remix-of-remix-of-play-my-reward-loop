@@ -159,10 +159,12 @@
     background-size: 14px 14px;
   }
 
-  /* Streak flame pulse */
+  /* Streak flame pulse — warm core with cyan outer halo */
   .flame-pulse {
     animation: flame-pulse 1.6s ease-in-out infinite;
-    filter: drop-shadow(0 0 6px oklch(0.85 0.2 60 / 0.6));
+    filter:
+      drop-shadow(0 0 6px oklch(0.85 0.2 60 / 0.6))
+      drop-shadow(0 0 14px oklch(0.85 0.16 200 / 0.45));
   }
   @keyframes flame-pulse {
     0%, 100% { transform: scale(1); }
