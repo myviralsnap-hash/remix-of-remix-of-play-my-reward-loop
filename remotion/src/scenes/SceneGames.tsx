@@ -3,7 +3,7 @@ import { loadFont as loadDisplay } from "@remotion/google-fonts/Sora";
 import { loadFont as loadBody } from "@remotion/google-fonts/Inter";
 import { C } from "../theme";
 
-const display = loadDisplay("normal", { weights: ["800", "900"] }).fontFamily;
+const display = loadDisplay("normal", { weights: ["800"] }).fontFamily;
 const body = loadBody("normal", { weights: ["500", "700"] }).fontFamily;
 
 const games = [
@@ -21,7 +21,7 @@ export const SceneGames = () => {
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", fontFamily: display, padding: 60 }}>
       <div style={{
-        fontSize: 84, fontWeight: 900, color: C.cream, letterSpacing: -2,
+        fontSize: 84, fontWeight: 800, color: C.cream, letterSpacing: -2,
         textAlign: "center", lineHeight: 1.05, opacity: headOp,
         transform: `translateY(${headY}px)`, marginBottom: 100,
       }}>
@@ -45,7 +45,7 @@ export const SceneGames = () => {
                 display: "flex", alignItems: "center", justifyContent: "center", fontSize: 80,
               }}>{g.icon}</div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 64, fontWeight: 900, color: "#fff", letterSpacing: -1 }}>{g.name}</div>
+                <div style={{ fontSize: 64, fontWeight: 800, color: "#fff", letterSpacing: -1 }}>{g.name}</div>
                 <div style={{ fontFamily: body, fontWeight: 500, fontSize: 28, color: "rgba(255,255,255,0.9)", marginTop: 4 }}>
                   Earn up to {(i + 1) * 150} pts
                 </div>

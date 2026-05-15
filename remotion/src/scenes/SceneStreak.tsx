@@ -3,7 +3,7 @@ import { loadFont as loadDisplay } from "@remotion/google-fonts/Sora";
 import { loadFont as loadBody } from "@remotion/google-fonts/Inter";
 import { C } from "../theme";
 
-const display = loadDisplay("normal", { weights: ["800", "900"] }).fontFamily;
+const display = loadDisplay("normal", { weights: ["800"] }).fontFamily;
 const body = loadBody("normal", { weights: ["500", "700"] }).fontFamily;
 
 export const SceneStreak = () => {
@@ -18,7 +18,7 @@ export const SceneStreak = () => {
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", fontFamily: display, padding: 60 }}>
       <div style={{
-        fontSize: 84, fontWeight: 900, color: C.cream, letterSpacing: -2,
+        fontSize: 84, fontWeight: 800, color: C.cream, letterSpacing: -2,
         textAlign: "center", lineHeight: 1.05, opacity: headOp, marginBottom: 60,
       }}>
         Build your <span style={{ color: C.orangeBright }}>streak.</span>
@@ -31,7 +31,7 @@ export const SceneStreak = () => {
       }}>🔥</div>
 
       <div style={{
-        fontSize: 200, fontWeight: 900, color: C.orangeBright, letterSpacing: -8,
+        fontSize: 200, fontWeight: 800, color: C.orangeBright, letterSpacing: -8,
         opacity: interpolate(frame, [20, 40], [0, 1], { extrapolateRight: "clamp" }),
       }}>{count}</div>
       <div style={{
@@ -47,7 +47,7 @@ export const SceneStreak = () => {
               width: 90, height: 90, borderRadius: 24,
               background: `linear-gradient(135deg, ${C.orangeBright}, ${C.orangeDeep})`,
               display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 44, color: "#fff", fontWeight: 900,
+              fontSize: 44, color: "#fff", fontWeight: 800,
               transform: `scale(${sp})`, opacity: sp,
               boxShadow: "0 12px 24px rgba(234,88,12,0.4)",
             }}>✓</div>

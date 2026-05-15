@@ -4,7 +4,7 @@ import { loadFont as loadBody } from "@remotion/google-fonts/Inter";
 import { C } from "../theme";
 import { Phone } from "../components/Phone";
 
-const display = loadDisplay("normal", { weights: ["800", "900"] }).fontFamily;
+const display = loadDisplay("normal", { weights: ["800"] }).fontFamily;
 const body = loadBody("normal", { weights: ["500", "700"] }).fontFamily;
 
 const missions = [
@@ -24,7 +24,7 @@ export const SceneMissions = () => {
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: 140, fontFamily: display }}>
       <div style={{
-        fontSize: 84, fontWeight: 900, color: C.cream, letterSpacing: -2,
+        fontSize: 84, fontWeight: 800, color: C.cream, letterSpacing: -2,
         transform: `translateY(${headlineY}px)`, opacity: headlineOp, textAlign: "center", lineHeight: 1.05,
       }}>
         Daily missions,<br /><span style={{ color: C.orangeBright }}>real points.</span>
@@ -56,7 +56,7 @@ export const SceneMissions = () => {
                     width: 46, height: 46, borderRadius: 9999,
                     background: m.done ? C.green : "#fde6c8",
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    color: "#fff", fontWeight: 900, fontSize: 26,
+                    color: "#fff", fontWeight: 800, fontSize: 26,
                   }}>{m.done ? "✓" : ""}</div>
                   <div style={{ flex: 1, fontWeight: 700, fontSize: 24, color: C.ink }}>{m.title}</div>
                   <div style={{

@@ -3,7 +3,7 @@ import { loadFont as loadDisplay } from "@remotion/google-fonts/Sora";
 import { loadFont as loadBody } from "@remotion/google-fonts/Inter";
 import { C } from "../theme";
 
-const display = loadDisplay("normal", { weights: ["800", "900"] }).fontFamily;
+const display = loadDisplay("normal", { weights: ["800"] }).fontFamily;
 const body = loadBody("normal", { weights: ["500", "700"] }).fontFamily;
 
 export const SceneLogo = () => {
@@ -26,7 +26,7 @@ export const SceneLogo = () => {
         <Img src={staticFile("images/icon.png")} style={{ width: "100%", height: "100%", borderRadius: 80 }} />
       </div>
       <div style={{
-        fontSize: 110, fontWeight: 900, color: C.cream, letterSpacing: -3,
+        fontSize: 110, fontWeight: 800, color: C.cream, letterSpacing: -3,
         transform: `translateY(${titleY}px)`, opacity: titleOp,
       }}>
         Reward<span style={{ color: C.orangeBright }}>Loop</span>

@@ -3,7 +3,7 @@ import { loadFont as loadDisplay } from "@remotion/google-fonts/Sora";
 import { loadFont as loadBody } from "@remotion/google-fonts/Inter";
 import { C } from "../theme";
 
-const display = loadDisplay("normal", { weights: ["800", "900"] }).fontFamily;
+const display = loadDisplay("normal", { weights: ["800"] }).fontFamily;
 const body = loadBody("normal", { weights: ["500", "700"] }).fontFamily;
 
 export const SceneEnd = () => {
@@ -24,7 +24,7 @@ export const SceneEnd = () => {
         <Img src={staticFile("images/icon.png")} style={{ width: "100%", height: "100%", borderRadius: 72 }} />
       </div>
       <div style={{
-        fontSize: 130, fontWeight: 900, color: C.cream, letterSpacing: -4, opacity: titleOp,
+        fontSize: 130, fontWeight: 800, color: C.cream, letterSpacing: -4, opacity: titleOp,
       }}>
         Reward<span style={{ color: C.orangeBright }}>Loop</span>
       </div>
@@ -43,7 +43,7 @@ export const SceneEnd = () => {
         <div style={{ fontSize: 56 }}>▶</div>
         <div style={{ textAlign: "left" }}>
           <div style={{ fontFamily: body, fontSize: 22, opacity: 0.8 }}>GET IT ON</div>
-          <div style={{ fontSize: 44, fontWeight: 900, letterSpacing: -1 }}>Google Play</div>
+          <div style={{ fontSize: 44, fontWeight: 800, letterSpacing: -1 }}>Google Play</div>
         </div>
       </div>
     </AbsoluteFill>

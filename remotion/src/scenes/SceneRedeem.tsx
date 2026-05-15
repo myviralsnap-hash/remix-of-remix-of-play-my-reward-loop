@@ -3,7 +3,7 @@ import { loadFont as loadDisplay } from "@remotion/google-fonts/Sora";
 import { loadFont as loadBody } from "@remotion/google-fonts/Inter";
 import { C } from "../theme";
 
-const display = loadDisplay("normal", { weights: ["800", "900"] }).fontFamily;
+const display = loadDisplay("normal", { weights: ["800"] }).fontFamily;
 const body = loadBody("normal", { weights: ["500", "700"] }).fontFamily;
 
 const cards = [
@@ -22,7 +22,7 @@ export const SceneRedeem = () => {
   return (
     <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", fontFamily: display, padding: 60 }}>
       <div style={{
-        fontSize: 84, fontWeight: 900, color: C.cream, letterSpacing: -2,
+        fontSize: 84, fontWeight: 800, color: C.cream, letterSpacing: -2,
         textAlign: "center", lineHeight: 1.05, opacity: headOp, marginBottom: 30,
       }}>
         Redeem for <span style={{ color: C.orangeBright }}>real rewards.</span>
@@ -37,7 +37,7 @@ export const SceneRedeem = () => {
         <div style={{ fontFamily: body, fontWeight: 700, fontSize: 26, color: "rgba(255,255,255,0.85)", letterSpacing: 3 }}>
           YOUR BALANCE
         </div>
-        <div style={{ fontSize: 110, fontWeight: 900, color: "#fff", letterSpacing: -3, lineHeight: 1, marginTop: 6 }}>
+        <div style={{ fontSize: 110, fontWeight: 800, color: "#fff", letterSpacing: -3, lineHeight: 1, marginTop: 6 }}>
           {points.toLocaleString()} <span style={{ fontSize: 50 }}>pts</span>
         </div>
       </div>
@@ -55,7 +55,7 @@ export const SceneRedeem = () => {
               <div style={{ fontSize: 64 }}>{c.emoji}</div>
               <div>
                 <div style={{ fontFamily: body, fontSize: 22, opacity: 0.7, fontWeight: 500 }}>Gift Card</div>
-                <div style={{ fontSize: 38, fontWeight: 900, letterSpacing: -1 }}>{c.name}</div>
+                <div style={{ fontSize: 38, fontWeight: 800, letterSpacing: -1 }}>{c.name}</div>
               </div>
             </div>
           );
