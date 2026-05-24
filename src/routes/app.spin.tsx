@@ -75,9 +75,10 @@ function Spin() {
   const VB = 200;
   const C = VB / 2;
   const R_OUTER = 96;       // segment outer radius
-  const R_INNER = 26;       // hub cutout
-  const R_LABEL = 70;       // label center radius (well inside rim)
+  const R_INNER = 22;       // hub cutout
+  const R_LABEL = 82;       // label sits near the rim (Wheel-of-Fortune style)
   const segDeg = 360 / SEGMENTS.length;
+
 
   // Build wedge path
   const wedgePath = (i: number) => {
