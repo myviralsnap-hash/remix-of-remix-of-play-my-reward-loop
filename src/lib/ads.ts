@@ -177,7 +177,10 @@ export async function showBannerAd(): Promise<void> {
       adId: AD_UNITS.banner,
       adSize: BannerAdSize.ADAPTIVE_BANNER,
       position: BannerAdPosition.BOTTOM_CENTER,
-      margin: 0,
+      // Lift the banner above the in-app bottom tab bar (~64dp) so the
+      // navigation tabs (Home / Games / Invite / Redeem / Profile) remain
+      // visible and tappable on native.
+      margin: 64,
     };
     await AdMob.showBanner(options);
     bannerVisible = true;
