@@ -157,11 +157,10 @@ function Spin() {
                 />
               ))}
 
-              {/* Radial labels (Wheel of Fortune style) */}
+              {/* Radial labels (Wheel of Fortune style — number reads outward,
+                  top of digit toward the rim). */}
               {SEGMENTS.map((p, i) => {
                 const midDeg = i * segDeg + segDeg / 2;
-                // Rotate text so its baseline points outward from center.
-                // At midDeg=0 (top), we want text reading upward → rotate(midDeg) then translate.
                 return (
                   <g
                     key={`t${i}`}
@@ -172,11 +171,15 @@ function Spin() {
                       y="0"
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      className="neon-text"
+                      fill="#0b0b14"
+                      stroke="white"
+                      strokeWidth="0.6"
+                      paintOrder="stroke"
                       style={{
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: 900,
                         fontFamily: "ui-sans-serif, system-ui",
+                        letterSpacing: "-0.02em",
                       }}
                     >
                       {p}
