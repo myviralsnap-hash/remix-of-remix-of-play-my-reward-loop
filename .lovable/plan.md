@@ -1,26 +1,22 @@
 ## Plan
 
-1. **Isolate the freeze on auth screens**
-   - Prevent native ad/consent initialization from running while the user is on `/login`, `/signup`, and onboarding/auth-adjacent screens.
-   - Keep the web consent banner behavior intact in preview/web, but avoid any native overlay that can steal focus before the keyboard opens.
+Build a new Play Store promo screenshot by combining the **new neon black/teal/gold wheel** screenshot with the **"Spin to win bonus points / Every spin grants points — no losses"** orange header overlay from the old Play Store asset.
 
-2. **Harden Android text input behavior**
-   - Add Android-safe input handling for the auth form so taps always focus the field and the soft keyboard can take over cleanly.
-   - If needed, wire the Capacitor keyboard integration for native builds and avoid any viewport or focus settings that can lock the WebView after the first tap.
+### Steps
 
-3. **Add targeted native diagnostics and fallback protection**
-   - Add temporary console logging around field focus, blur, keyboard show/hide, and native ad/consent startup so the next test build tells us exactly what is blocking input.
-   - Guard native ad/consent calls so a failed or hanging native plugin cannot freeze the login UI.
+1. Copy both uploaded images into `/tmp/` so a Python/PIL script can read them.
+2. Write a short Pillow script that:
+   - Loads the new wheel screenshot (`wheel_replacement_google_play.jpg`) as the base.
+   - Draws the orange gradient header band across the top (matching the old screenshot's orange→amber gradient).
+   - Renders the headline **"Spin to win bonus points"** (bold white, large) and subline **"Every spin grants points — no losses"** (lighter white) centered over the orange band.
+   - Tucks the existing "Reward Wheel / Balance: 0 pts" app header just below, so the composition mirrors the old Play Store asset but with the new wheel visible underneath.
+3. Save the result to `/mnt/documents/playstore-wheel-v2.jpg` at Play Store screenshot proportions.
+4. QA: open the rendered image, confirm text is crisp, no clipping, wheel fully visible, bottom nav intact.
+5. Deliver via `<presentation-artifact>` so you can download and upload it to Play Console as the replacement screenshot.
 
-4. **Validate the fix in the Android flow**
-   - Verify that tapping email/password opens the keyboard, typing updates the field immediately, and the app no longer becomes unresponsive.
-   - Confirm this on login first, then signup, since both use the same input pattern.
+### Notes
 
-## Expected outcome
-- The login screen should behave normally on Android: tap a field, keyboard appears, typing works, and the app does not freeze.
-- Google sign-in stays hidden in the native app, and email/password remains the working sign-in path.
+- I'll keep the same copy as the original Play Store screenshot for consistency. If you'd rather have different wording (e.g. "Spin the neon wheel" / "Win up to 100 points per spin"), tell me and I'll swap it in.
+- Output will be a single JPG sized to match the source (≈1080 wide) — Play Console accepts that directly.
 
-## Technical details
-- Likely culprit: a native Android overlay/focus trap from the ad-consent path, not text color styling.
-- Files most likely to change: `src/lib/ads.ts`, `src/components/AdSlot.tsx` or route-level callers, auth routes (`src/routes/login.tsx`, `src/routes/signup.tsx`), and possibly `capacitor.config.ts` or a small native-keyboard helper.
-- I’ll keep the change tightly scoped to the login freeze and won’t alter unrelated auth logic.
+Ready to switch to build mode and generate it?
