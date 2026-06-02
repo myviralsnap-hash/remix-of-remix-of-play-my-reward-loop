@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { LogOut, History, Shield, FileText, Info, Wallet, Target, Brain, BarChart3, HelpCircle, Flame, Trophy, Star, Award, Zap, Trash2, Database } from "lucide-react";
+import { LogOut, History, Shield, FileText, Info, Wallet, Target, Brain, BarChart3, HelpCircle, Flame, Trophy, Star, Award, Zap, Trash2, Database, ShieldCheck } from "lucide-react";
 import { useApp } from "@/lib/app-context";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
