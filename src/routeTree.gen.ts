@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
@@ -43,6 +44,11 @@ import { Route as LovableEmailTransactionalSendRouteImport } from './routes/lova
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/app/about': typeof AppAboutRoute
   '/app/games': typeof AppGamesRoute
   '/app/how-rewards': typeof AppHowRewardsRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/app/about': typeof AppAboutRoute
   '/app/games': typeof AppGamesRoute
   '/app/how-rewards': typeof AppHowRewardsRoute
@@ -288,6 +296,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
   '/signup': typeof SignupRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/app/about': typeof AppAboutRoute
   '/app/games': typeof AppGamesRoute
   '/app/how-rewards': typeof AppHowRewardsRoute
@@ -325,6 +334,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/unsubscribe'
     | '/app/about'
     | '/app/games'
     | '/app/how-rewards'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/unsubscribe'
     | '/app/about'
     | '/app/games'
     | '/app/how-rewards'
@@ -393,6 +404,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/onboarding'
     | '/signup'
+    | '/unsubscribe'
     | '/app/about'
     | '/app/games'
     | '/app/how-rewards'
@@ -429,6 +441,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
   SignupRoute: typeof SignupRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
   LovableEmailSuppressionRoute: typeof LovableEmailSuppressionRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -438,6 +451,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -739,6 +759,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
   SignupRoute: SignupRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
   LovableEmailSuppressionRoute: LovableEmailSuppressionRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
