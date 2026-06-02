@@ -1,34 +1,29 @@
+# Finish email infrastructure + admin redemption alert
 
-## Admin Redemption Review Panel
+The email queue route and packages are in place. Now I'll finish wiring everything so admins get an email whenever a user requests a gift card redemption.
 
-Build a secure admin-only page where you review pending gift card redemptions, mark them as paid (after manually sending the code) or rejected (refunds points), and get an email alert whenever a new request comes in.
+## Steps
 
-### What you'll get
+1. **Scaffold transactional email system** — creates the `send-transactional-email` server route, unsubscribe handler, suppression handler, and registry (`src/lib/email-templates/`).
 
-1. **Admin role system** — secure `user_roles` table; your account flagged as `admin`.
-2. **Admin route** at `/app/admin/redemptions` — only visible if you're an admin; everyone else gets redirected.
-3. **Pending queue** — list of all pending withdrawals showing: user name, brand, amount, recipient email, points cost, date requested.
-4. **Approve flow** — paste the gift card code, click "Mark as Delivered" → status flips to `paid`, code stored in `admin_notes`, user's Redemption History updates to "delivered".
-5. **Reject flow** — enter a reason, click "Reject" → status flips to `rejected`, **points are automatically refunded** to the user.
-6. **Email alert** — when a user submits a redemption, you get an email at your address with the details and a link to the admin panel. Uses Lovable's built-in email system (no API keys).
+2. **Set up the email queue cron job** — schedules `process-email-queue` to run every minute so queued emails actually get sent.
 
-### Technical pieces
+3. **Create the "new redemption" email template** — branded RewardLoop email showing:
+   - User name + email
+   - Points amount + gift card brand
+   - Recipient email
+   - Link to admin redemptions page
 
-- **DB migration**:
-  - `app_role` enum (`admin`, `user`)
-  - `user_roles` table + `has_role(uuid, app_role)` SECURITY DEFINER function (avoids RLS recursion)
-  - New RLS policies on `withdrawals`: admins can SELECT all rows; admins can UPDATE status/admin_notes
-  - New `approve_withdrawal(id, code)` and `reject_withdrawal(id, reason)` SECURITY DEFINER functions — reject refunds points atomically and logs a `withdrawal_refund` transaction
-  - Seed your account as admin (you'll tell me your email after migration runs)
-- **Email infra**: scaffold transactional email + create `new-redemption-request` template; trigger from `request_withdrawal` via a small server function that fires after insert
-- **Admin UI**: `/app/admin/redemptions` route gated by `has_role` check; table of pending items with action dialogs
+4. **Trigger the email on redemption** — update `request_withdrawal` flow so that after a successful redemption request, the app calls the send endpoint with `recipientEmail = founder@rewardloop.fun` and the new-redemption template.
 
-### What stays manual (for now)
+5. **Create `/unsubscribe` page** — required public page that handles the unsubscribe token from email footers.
 
-You'll still get the gift card code yourself (from Amazon, Visa, etc.) and paste it into the approve dialog. Auto-fulfillment via Tango/Reloadly can be added later as a drop-in upgrade.
+## Technical details
 
-### Open question
+- Sender domain: `notify.rewardloop.fun` (verified)
+- Admin recipient: `founder@rewardloop.fun`
+- Trigger location: client-side, right after `supabase.rpc('request_withdrawal', ...)` succeeds on the redemption page
+- Idempotency key: `redemption-alert-${withdrawal.id}`
+- Uses Lovable's built-in email infrastructure (no third-party service)
 
-After the migration runs, tell me:
-1. The **email address** that should receive the alerts (probably your account email).
-2. Whether you've already set up a custom email domain in Lovable Cloud — if not, I'll guide you through the one-time domain setup so emails don't get spam-filtered.
+No database schema changes needed — the email infra tables already exist.
