@@ -79,13 +79,14 @@ function Withdraw() {
     if (total > balance) return toast.error("Not enough points (including 2% processing fee)");
 
     setLoading(true);
-    const { data: wd, error } = await supabase
+    const { data, error } = await supabase
       .rpc("request_withdrawal", {
         p_points: amount,
         p_brand: brand,
         p_email: email.trim(),
       })
       .single();
+    const wd = data as W | null;
     setLoading(false);
     if (error) return toast.error(error.message);
     toast.success("Redemption request submitted — we'll email you when it's delivered");
