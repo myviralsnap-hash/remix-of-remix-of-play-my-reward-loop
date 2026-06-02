@@ -145,6 +145,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       withdrawals: {
         Row: {
           admin_notes: string | null
@@ -190,6 +211,42 @@ export type Database = {
     }
     Functions: {
       _last_tx_at: { Args: { p_type: string; p_user: string }; Returns: string }
+      admin_list_withdrawals: {
+        Args: { p_status?: string }
+        Returns: {
+          admin_notes: string
+          created_at: string
+          gift_card_brand: string
+          id: string
+          points: number
+          recipient_email: string
+          status: string
+          user_email: string
+          user_id: string
+          user_name: string
+        }[]
+      }
+      approve_withdrawal: {
+        Args: { p_code: string; p_id: string }
+        Returns: {
+          admin_notes: string | null
+          amount_btc: number | null
+          created_at: string
+          gift_card_brand: string | null
+          id: string
+          points: number
+          recipient_email: string | null
+          status: string
+          user_id: string
+          wallet_address: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "withdrawals"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       award_points: {
         Args: { p_meta?: Json; p_points: number; p_type: string }
         Returns: {
@@ -290,6 +347,34 @@ export type Database = {
       }
       delete_my_account: { Args: never; Returns: undefined }
       gen_referral_code: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      reject_withdrawal: {
+        Args: { p_id: string; p_reason: string }
+        Returns: {
+          admin_notes: string | null
+          amount_btc: number | null
+          created_at: string
+          gift_card_brand: string | null
+          id: string
+          points: number
+          recipient_email: string | null
+          status: string
+          user_id: string
+          wallet_address: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "withdrawals"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       request_withdrawal: {
         Args: { p_brand: string; p_email: string; p_points: number }
         Returns: {
@@ -323,7 +408,7 @@ export type Database = {
       trivia_daily_seed: { Args: never; Returns: number }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -450,6 +535,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
