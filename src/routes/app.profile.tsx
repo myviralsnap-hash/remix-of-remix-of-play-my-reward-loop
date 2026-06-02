@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { LogOut, History, Shield, FileText, Info, Wallet, Target, Brain, BarChart3, HelpCircle, Flame, Trophy, Star, Award, Zap, Trash2, Database } from "lucide-react";
+import { LogOut, History, Shield, FileText, Info, Wallet, Target, Brain, BarChart3, HelpCircle, Flame, Trophy, Star, Award, Zap, Trash2, Database, ShieldCheck } from "lucide-react";
 import { useApp } from "@/lib/app-context";
 import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
@@ -27,12 +27,15 @@ function ProfilePage() {
   const { profile, userId } = useApp();
   const navigate = useNavigate();
   const [txs, setTxs] = useState<Tx[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const runDelete = useServerFn(deleteMyAccount);
 
   useEffect(() => {
     supabase.from("transactions").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(50)
       .then(({ data }) => setTxs((data ?? []) as Tx[]));
+    supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle()
+      .then(({ data }) => setIsAdmin(!!data));
   }, [userId]);
 
   const logout = async () => { await supabase.auth.signOut(); navigate({ to: "/login" }); };
@@ -179,6 +182,7 @@ function ProfilePage() {
         <Row icon={BarChart3} label="Leaderboard" to="/app/leaderboard" />
         <Row icon={HelpCircle} label="How Rewards Work" to="/app/how-rewards" />
         <Row icon={Wallet} label="Redemption History" to="/app/withdraw-history" />
+        {isAdmin && <Row icon={ShieldCheck} label="Admin · Review Redemptions" to="/app/admin/redemptions" />}
         <Row icon={Info} label="About App" to="/app/about" />
         <Row icon={Shield} label="Privacy Policy" to="/legal/privacy" />
         <Row icon={FileText} label="Terms & Conditions" to="/legal/terms" />
