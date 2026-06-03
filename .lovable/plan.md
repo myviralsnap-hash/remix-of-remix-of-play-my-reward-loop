@@ -1,53 +1,50 @@
-## What's happening
+# RewardLoop Promo v2 — Landscape Upgrade
 
-I checked your database and found the real bug — and it's a good news / bad news situation.
+Rebuild the existing Remotion promo as a polished **16:9 / 1920×1080** spot, ~**28 seconds @ 30fps** (840 frames — safely under the 10-min sandbox render cap), with **AI-generated background music** via ElevenLabs.
 
-**Good news:** the wheel is working. Your spins are being recorded in the `transactions` table:
-- 3 spin rewards logged for your account today (15, 20, 20 points)
+## Creative direction
 
-**Bad news:** your account is missing its `profiles` row entirely. The `award_points` function updates the profile to add points, but if no profile row exists, the UPDATE silently affects 0 rows — the transaction still gets logged, but your balance stays at 0.
+- **Aesthetic**: "Kinetic Energy meets Premium Mobile App" — fast staggered entrances, bold orange-on-deep-brown palette already established (`#fbbf24`, `#ea580c`, cream `#fff7ed`, deep `#0d0703`), confident springs, cinematic restraint between beats.
+- **Reuse** existing brand tokens in `remotion/src/theme.ts` and the existing `public/images/icon.png`.
+- **Layout shift**: landscape lets us put **phone mockup on one side + headline/feature copy on the other**, instead of stacked. Much more "app promo" feeling.
+- **Persistent layer**: keep the floating dots background drifting across the whole video for continuity between scenes.
 
-## Root cause
+## Scene plan (~840 frames total)
 
-The database has a `handle_new_user()` function that's supposed to create a profile automatically when someone signs up. But the **trigger that calls it on `auth.users` is missing**. So:
-- Users who sign up via Google on the phone → no profile row → points never stick
-- Older users (who signed up when the trigger existed) → fine
+```text
+00:00–00:03  SceneLogo         Icon spring-in + "RewardLoop" wordmark + tagline
+00:03–00:08  SceneHook         "Play games. Earn real rewards." bold type, off-center
+00:08–00:14  SceneMissions     Phone-left, copy-right: Today's Missions checklist
+00:14–00:20  SceneGames        Three game cards (Spin / Trivia / Tap Dash) slide in
+00:20–00:24  SceneStreak       Flame + day counter ticking 1 → 28
+00:24–00:28  SceneRedeem       Balance counter + gift card grid (Amazon/Visa/PP/Apple)
+00:28–00:28  SceneEnd          Logo lockup + "Get it on Google Play" badge
+```
 
-That's why two profiles in the DB work normally, but your new phone-signup account shows 0.
+Transitions: mix of `fade` and `slide` from `@remotion/transitions` (already installed), reused consistently rather than a new effect each cut.
 
-## The fix (one migration)
+## Background music
 
-1. **Recreate the missing trigger** on `auth.users` so every new signup gets a profile:
-   ```sql
-   CREATE TRIGGER on_auth_user_created
-     AFTER INSERT ON auth.users
-     FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-   ```
+- Generate a **~30s upbeat, modern, optimistic electronic track** ("warm synth pluck, light percussion, uplifting, app-promo energy, no vocals") via ElevenLabs Music API → save to `remotion/public/audio/bg.mp3`.
+- Add as a Remotion `<Audio>` element at the root of `MainVideo` with `volume` ramp-in (0 → 0.55 over first 15 frames) and ramp-out at the tail.
+- **Re-enable audio in the renderer** — current `scripts/render.mjs` has `muted: true`. The skill notes Nix ffmpeg lacks `libfdk_aac`, so we'll switch the renderer to `audioCodec: 'aac'` using the default encoder, or fall back to muxing the MP3 in with ffmpeg as a post-step if encoding fails.
 
-2. **Backfill profiles** for any existing auth users who don't have one, and credit them the points from transactions they already earned:
-   ```sql
-   -- Create missing profiles
-   INSERT INTO public.profiles (id, name, email, referral_code, points, total_earned)
-   SELECT u.id, u.raw_user_meta_data->>'name', u.email,
-          public.gen_referral_code(), 0, 0
-   FROM auth.users u
-   LEFT JOIN public.profiles p ON p.id = u.id
-   WHERE p.id IS NULL;
+## Files to change / add
 
-   -- Credit them the points from already-logged transactions
-   UPDATE public.profiles p
-   SET points = points + sub.total,
-       total_earned = total_earned + sub.total
-   FROM (
-     SELECT user_id, SUM(points)::int AS total
-     FROM public.transactions
-     WHERE points > 0
-     GROUP BY user_id
-   ) sub
-   WHERE p.id = sub.user_id
-     AND p.total_earned = 0;  -- only freshly-backfilled rows
-   ```
+- `remotion/src/Root.tsx` — change composition to `1920×1080`, `durationInFrames: 840`.
+- `remotion/src/MainVideo.tsx` — re-choreograph scene order/durations, add `<Audio>`, adjust `FloatingDots` for landscape.
+- `remotion/src/scenes/SceneLogo.tsx`, `SceneMissions.tsx`, `SceneGames.tsx`, `SceneStreak.tsx`, `SceneRedeem.tsx`, `SceneEnd.tsx` — re-layout each for landscape (split layouts, larger negative space, repositioned phone mockup).
+- `remotion/src/scenes/SceneHook.tsx` — **new** hook scene right after the logo.
+- `remotion/src/components/Phone.tsx` — minor sizing tweak so it fits a half-width column.
+- `remotion/public/audio/bg.mp3` — **new**, generated.
+- `remotion/scripts/render.mjs` — un-mute, ensure audio is encoded; output to `/mnt/documents/rewardloop-promo-v2.mp4` (keeps the original v1 intact for comparison).
 
-After this runs, your phone account will get its profile created and the 55 points from your three spins will appear on the dashboard. New signups will work correctly going forward.
+## Technical notes
 
-No app code changes needed — this is purely a database fix.
+- ElevenLabs key: will check `secrets--fetch_secrets` for `ELEVENLABS_API_KEY` and request it via `add_secret` if missing before generating music.
+- Render via existing `node scripts/render.mjs` flow. Total runtime well under the 600s cap at 1920×1080.
+- App itself is untouched — this is purely a marketing asset under `remotion/` and `/mnt/documents/`.
+
+## Deliverable
+
+A single MP4: `/mnt/documents/rewardloop-promo-v2.mp4` (~28s, 1920×1080, with music), surfaced via a `<presentation-artifact>` tag so you can download and use it for Play Store feature graphics, social posts, or your website.
