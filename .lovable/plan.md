@@ -1,39 +1,63 @@
 ## Goal
 
-Get testers back into a working app ASAP by rolling the project back to the last good state (before the wheel + logo updates that introduced the white screen). Keep the newer backend (email infra, unsubscribe page, DB) intact — reverting code does not delete database tables or domain config.
+Give you ready-to-paste PowerShell commands (using your `SexyMimi` user path) to build and sign the next AAB from the current working code, then upload it to Play Console.
 
-## How we'll do it
+---
 
-Use Lovable's built-in **History** (no code edits, no AAB rebuild). Since the app is a PWA loading `rewardloop.fun`, the moment we revert + Publish → Update, every tester's app loads the working version again. Play Store is untouched.
+## Step 1 — Build the signed AAB
 
-## Steps
+Open **PowerShell** (just search "PowerShell" in the Start menu) and paste this whole block:
 
-1. Open **History** (top of the chat).
-2. Find the last message/version from **before** the wheel/logo work started — the version testers were hammering on v18. Look for a checkpoint from around when v2.1.6 / v18 was built.
-3. Click **Restore** on that version. The project snaps back to that exact state.
-4. Verify the preview loads (no white screen, wheel spins, login works).
-5. Click **Publish → Update**. Live site updates in ~30 seconds.
-6. Have a tester force-close and reopen the PWA — they'll get the rolled-back version automatically.
+```powershell
+cd C:\Users\SexyMimi\Desktop\rewardloop
+git pull
+.\build-aab.ps1
+```
 
-## What stays vs what goes
+When it prompts:
+- **Keystore password** → type your `rewardloopAAB` keystore password, press Enter (typing is hidden, that's normal)
+- **Key password** → just press Enter to reuse the same password (or type the key password if different)
 
-**Stays (backend is separate from code history):**
-- Database tables and all user data
-- `rewardloop.fun` custom domain
-- Email domain setup (`@rewardloop.fun`)
-- Play Store listing and existing AAB v25 (we don't touch Play Console)
+The script will automatically:
+1. Pull latest code from GitHub
+2. `bun install` + `bun run build` (compile web app)
+3. `bunx cap sync android` (copy build into Android wrapper)
+4. Bump `versionCode` from 25 → 26
+5. Sign and build the release AAB
+6. Open File Explorer with the AAB selected
 
-**Goes (rolled back with the code):**
-- Recent wheel changes
-- Recent logo changes
-- The email infrastructure files added in the last session (unsubscribe page, admin alert template, etc.) — the DB table for suppression stays, just the frontend wiring goes
+**Output file will be at:**
+```
+C:\Users\SexyMimi\Desktop\rewardloop\android\app\build\outputs\bundle\release\app-release.aab
+```
 
-You can re-add the wheel/logo/email work later, one small change at a time, and test each before publishing.
+Takes about 3–8 minutes total depending on your machine.
 
-## After testers confirm it works
+---
 
-When you're ready to redo the wheel + logo, do them as **separate small changes**, publishing and testing each one before moving to the next. That way if a white screen comes back, we know exactly which change caused it.
+## Step 2 — Upload to Play Console
 
-<presentation-actions>
-<presentation-open-history>Open History</presentation-open-history>
-</presentation-actions>
+1. Go to https://play.google.com/console → click **RewardLoop**
+2. Left sidebar → **Testing → Closed testing** (your tester track)
+3. Click **Create new release**
+4. Drag `app-release.aab` into the upload box
+5. **Release notes** — paste something like:
+   ```
+   Stability fixes and UI polish.
+   ```
+6. Click **Next → Save → Review release → Start rollout to Closed testing**
+
+Testers get the update notification within a few minutes to a couple hours.
+
+---
+
+## If something errors out
+
+Common ones and quick fixes:
+
+- **`git pull` says "your branch has diverged"** → run `git reset --hard origin/main` then re-run `.\build-aab.ps1`
+- **`bun: command not found`** → close PowerShell and reopen it (it picks up bun after install)
+- **Keystore password wrong** → script will error; just re-run and type carefully
+- **`gradlew.bat` not found** → run `bunx cap sync android` once manually, then re-run script
+
+Paste any error you hit and I'll give you the exact fix.
