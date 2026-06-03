@@ -6,8 +6,8 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const hasMusic = fs.existsSync(path.resolve(__dirname, "../public/audio/bg.mp3"));
-console.log(`Background music present: ${hasMusic}`);
+// libfdk_aac unavailable in sandbox ffmpeg; always render muted, mux audio post-step if needed
+const hasMusic = false;
 
 const bundled = await bundle({
   entryPoint: path.resolve(__dirname, "../src/index.ts"),

@@ -84,7 +84,7 @@ export const MainVideo = () => {
         <TransitionSeries.Sequence durationInFrames={110}><SceneEnd /></TransitionSeries.Sequence>
       </TransitionSeries>
       <Vignette />
-      <BackgroundMusic />
+      {/* <BackgroundMusic /> — re-enable once a music track is available and ffmpeg supports libfdk_aac */}
     </AbsoluteFill>
   );
 };
