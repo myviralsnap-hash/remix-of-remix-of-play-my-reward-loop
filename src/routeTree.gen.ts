@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ShareRouteImport } from './routes/share'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LegalRouteImport } from './routes/legal'
@@ -52,6 +53,11 @@ const UnsubscribeRoute = UnsubscribeRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareRoute = ShareRouteImport.update({
+  id: '/share',
+  path: '/share',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -224,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/share': typeof ShareRoute
   '/signup': typeof SignupRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/app/about': typeof AppAboutRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/share': typeof ShareRoute
   '/signup': typeof SignupRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/app/about': typeof AppAboutRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/legal': typeof LegalRouteWithChildren
   '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
+  '/share': typeof ShareRoute
   '/signup': typeof SignupRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/app/about': typeof AppAboutRoute
@@ -333,6 +342,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/login'
     | '/onboarding'
+    | '/share'
     | '/signup'
     | '/unsubscribe'
     | '/app/about'
@@ -367,6 +377,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/onboarding'
+    | '/share'
     | '/signup'
     | '/unsubscribe'
     | '/app/about'
@@ -403,6 +414,7 @@ export interface FileRouteTypes {
     | '/legal'
     | '/login'
     | '/onboarding'
+    | '/share'
     | '/signup'
     | '/unsubscribe'
     | '/app/about'
@@ -440,6 +452,7 @@ export interface RootRouteChildren {
   LegalRoute: typeof LegalRouteWithChildren
   LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
+  ShareRoute: typeof ShareRoute
   SignupRoute: typeof SignupRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   EmailUnsubscribeRoute: typeof EmailUnsubscribeRoute
@@ -463,6 +476,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share': {
+      id: '/share'
+      path: '/share'
+      fullPath: '/share'
+      preLoaderRoute: typeof ShareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -758,6 +778,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalRoute: LegalRouteWithChildren,
   LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
+  ShareRoute: ShareRoute,
   SignupRoute: SignupRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   EmailUnsubscribeRoute: EmailUnsubscribeRoute,
