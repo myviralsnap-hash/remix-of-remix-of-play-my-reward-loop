@@ -184,6 +184,7 @@ function ProfilePage() {
         <Row icon={Wallet} label="Redemption History" to="/app/withdraw-history" />
         {isAdmin && <Row icon={ShieldCheck} label="Admin · Review Redemptions" to="/app/admin/redemptions" />}
         <Row icon={Info} label="About App" to="/app/about" />
+        <Row icon={Share2} label="Share & QR Code" to="/share" />
         <Row icon={Shield} label="Privacy Policy" to="/legal/privacy" />
         <Row icon={FileText} label="Terms & Conditions" to="/legal/terms" />
         <Row icon={Database} label="Data Safety" to="/legal/data-safety" />
