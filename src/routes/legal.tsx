@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 export const Route = createFileRoute("/legal")({ component: LegalLayout });
 
 const links = [
+  { to: "/share", label: "Share" },
   { to: "/legal/privacy", label: "Privacy" },
   { to: "/legal/terms", label: "Terms" },
   { to: "/legal/disclaimer", label: "Disclaimer" },
