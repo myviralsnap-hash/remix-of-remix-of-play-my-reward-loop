@@ -10,7 +10,7 @@ import { z } from "zod";
 export const Route = createFileRoute("/app/withdraw")({ component: Withdraw });
 
 const FEE_RATE = 0.02;
-const MIN_POINTS = 3000;
+const MIN_POINTS = 10000;
 const POINTS_PER_USD = 1000; // 1,000 pts ≈ $1 gift card value
 
 const GIFT_CARDS = [
@@ -22,7 +22,7 @@ const GIFT_CARDS = [
   { id: "starbucks", label: "Starbucks", emoji: "", note: "Selected regions" },
 ] as const;
 
-const TIERS = [3000, 5000, 10000, 25000];
+const TIERS = [10000, 15000, 25000, 50000];
 
 const formSchema = z.object({
   brand: z.enum(["amazon", "visa", "google_play", "apple", "steam", "starbucks"]),
