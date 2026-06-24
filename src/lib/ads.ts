@@ -43,9 +43,19 @@ const TEST_AD_UNITS = {
 
 const isNative = () => Capacitor.isNativePlatform();
 
-// Use real units only on native production builds. Native dev builds and all
-// web previews use test units.
-export const AD_UNITS = isNative() && import.meta.env.PROD ? PROD_AD_UNITS : TEST_AD_UNITS;
+// Real ads on the installed Android app (Capacitor native). Web preview /
+// Lovable preview / local dev all run in a browser → test units, always.
+//
+// Note: this is evaluated lazily via a getter because Capacitor's native
+// bridge isn't guaranteed to be attached at module top-level on every
+// runtime, but IS attached by the time any ad call is made.
+export function getAdUnits() {
+  return isNative() ? PROD_AD_UNITS : TEST_AD_UNITS;
+}
+// Back-compat for any callers reading the constant directly.
+export const AD_UNITS = new Proxy({} as typeof PROD_AD_UNITS, {
+  get: (_t, prop: keyof typeof PROD_AD_UNITS) => getAdUnits()[prop],
+});
 
 export type RewardedResult = { success: boolean; fallback: boolean };
 
