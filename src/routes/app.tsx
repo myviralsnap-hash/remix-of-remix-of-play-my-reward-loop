@@ -56,14 +56,23 @@ function AppLayout() {
 
   return (
     <AppContext.Provider value={{ profile, userId: user.id, refresh }}>
-      <div className="min-h-screen flex flex-col bg-background">
-        <main className="flex-1 pb-20">
+      <div
+        className="min-h-screen flex flex-col bg-background"
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+      >
+        <main
+          className="flex-1"
+          style={{ paddingBottom: "calc(5rem + env(safe-area-inset-bottom))" }}
+        >
           <div key={location.pathname} className="page-fade">
             <Outlet />
           </div>
         </main>
 
-        <nav className="fixed bottom-0 inset-x-0 bg-card/95 backdrop-blur border-t border-border card-shadow z-30">
+        <nav
+          className="fixed bottom-0 inset-x-0 bg-card/95 backdrop-blur border-t border-border card-shadow z-30"
+          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        >
           <ul className="grid grid-cols-5 max-w-md mx-auto">
             {tabs.map((t) => {
               const active = location.pathname === t.to;
