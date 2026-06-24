@@ -43,9 +43,19 @@ const TEST_AD_UNITS = {
 
 const isNative = () => Capacitor.isNativePlatform();
 
-// Use real units only on native production builds. Native dev builds and all
-// web previews use test units.
-export const AD_UNITS = isNative() && import.meta.env.PROD ? PROD_AD_UNITS : TEST_AD_UNITS;
+// Real ads on the installed Android app (Capacitor native). Web preview /
+// Lovable preview / local dev all run in a browser → test units, always.
+//
+// Note: this is evaluated lazily via a getter because Capacitor's native
+// bridge isn't guaranteed to be attached at module top-level on every
+// runtime, but IS attached by the time any ad call is made.
+export function getAdUnits() {
+  return isNative() ? PROD_AD_UNITS : TEST_AD_UNITS;
+}
+// Back-compat for any callers reading the constant directly.
+export const AD_UNITS = new Proxy({} as typeof PROD_AD_UNITS, {
+  get: (_t, prop: keyof typeof PROD_AD_UNITS) => getAdUnits()[prop],
+});
 
 export type RewardedResult = { success: boolean; fallback: boolean };
 
@@ -64,10 +74,11 @@ export async function initAds(): Promise<void> {
 
   try {
     await AdMob.initialize({
-      // initializeForTesting registers this device as a test device so we never
-      // serve a live ad against our own publisher id during dev. Disable on
-      // production native builds.
-      initializeForTesting: !import.meta.env.PROD,
+      // Always false on native — we want real ads in the installed Play
+      // Store app. For your own device, register it as a test device in the
+      // AdMob console (Settings → Test devices) using the device ID printed
+      // in logcat: "Use AdRequest.Builder.addTestDevice(...)".
+      initializeForTesting: false,
     });
 
     // EU User Messaging Platform consent. Required by Google before any ad
