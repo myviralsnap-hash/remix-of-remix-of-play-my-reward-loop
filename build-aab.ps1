@@ -2,7 +2,7 @@
 # Usage: cd Desktop\rewardloop ; .\build-aab.ps1
 
 $ProjectPath  = "$env:USERPROFILE\Desktop\rewardloop"
-$KeystorePath = "$env:USERPROFILE\Downloads\Other\rewardloopAAB"
+$KeystorePath = "$env:USERPROFILE\rewardloop-keystore"
 $KeyAlias     = "rewardloop1"
 $BumpVersion  = $true
 
@@ -50,6 +50,11 @@ $keyPassSecure   = Read-Host "Key password (Enter to reuse keystore password)" -
 $storePass = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($storePassSecure))
 $keyPass   = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($keyPassSecure))
 if ([string]::IsNullOrEmpty($keyPass)) { $keyPass = $storePass }
+
+if (-not (Test-Path $KeystorePath)) {
+    Write-Error "Keystore not found at: $KeystorePath"
+    exit 1
+}
 
 Step "Building signed release AAB"
 Set-Location "$ProjectPath\android"
